@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.TreeMap;
 import com.google.auto.service.AutoService;
+import com.ooftf.docking.annotation.AppShip;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -41,16 +42,18 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 
+import static com.ooftf.docking.compiler.Consts.KEY_MODULE_NAME;
+
 @AutoService(Processor.class)
 @SupportedOptions(KEY_MODULE_NAME)
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedAnnotationTypes(ANNOTATION_TYPE_INTECEPTOR)
 public class AppShipProcessor extends AbstractProcessor {
-    private Map<Integer, Element> interceptors = new TreeMap<>();
+    private Map<Integer, Element> AppShips = new TreeMap<>();
     private Filer mFiler;       // File util, write class file into disk.
     private Elements elementUtil;
     private String moduleName = null;   // Module name, maybe its 'app' or others
-    private TypeMirror iInterceptor = null;
+    private TypeMirror iAppShip = null;
 
     /**
      * Initializes the processor with the processing environment by
@@ -83,7 +86,7 @@ public class AppShipProcessor extends AbstractProcessor {
             throw new RuntimeException("ARouter::Compiler >>> No module name, for more information, look at gradle log.");
         }
 
-        iInterceptor = elementUtil.getTypeElement(Consts.IINTERCEPTOR).asType();
+        iAppShip = elementUtil.getTypeElement(Consts.IAPPLICATION).asType();
 
     }
 
@@ -96,9 +99,9 @@ public class AppShipProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (CollectionUtils.isNotEmpty(annotations)) {
-            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Interceptor.class);
+            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(AppShip.class);
             try {
-                parseInterceptors(elements);
+                parseAppShips(elements);
             } catch (Exception e) {
 
             }
@@ -113,35 +116,35 @@ public class AppShipProcessor extends AbstractProcessor {
      *
      * @param elements elements of tollgate.
      */
-    private void parseInterceptors(Set<? extends Element> elements) throws IOException {
+    private void parseAppShips(Set<? extends Element> elements) throws IOException {
         if (CollectionUtils.isNotEmpty(elements)) {
 
 
             // Verify and cache, sort incidentally.
             for (Element element : elements) {
-                if (verify(element)) {  // Check the interceptor meta
+                if (verify(element)) {  // Check the AppShip meta
 
-                    Interceptor interceptor = element.getAnnotation(Interceptor.class);
+                    AppShip annotation = element.getAnnotation(AppShip.class);
 
-                    Element lastInterceptor = interceptors.get(interceptor.priority());
-                    if (null != lastInterceptor) { // Added, throw exceptions
+                    Element lastAppShip = AppShips.get(annotation.priority());
+                    if (null != lastAppShip) { // Added, throw exceptions
                         throw new IllegalArgumentException(
-                                String.format(Locale.getDefault(), "More than one interceptors use same priority [%d], They are [%s] and [%s].",
-                                        interceptor.priority(),
-                                        lastInterceptor.getSimpleName(),
+                                String.format(Locale.getDefault(), "More than one AppShips use same priority [%d], They are [%s] and [%s].",
+                                        AppShip.priority(),
+                                        lastAppShip.getSimpleName(),
                                         element.getSimpleName())
                         );
                     }
 
-                    interceptors.put(interceptor.priority(), element);
+                    AppShips.put(AppShip.priority(), element);
                 } else {
 
                 }
             }
 
             // Interface of ARouter.
-            TypeElement type_ITollgate = elementUtil.getTypeElement(IINTERCEPTOR);
-            TypeElement type_ITollgateGroup = elementUtil.getTypeElement(IINTERCEPTOR_GROUP);
+            TypeElement type_ITollgate = elementUtil.getTypeElement(IAppShip);
+            TypeElement type_ITollgateGroup = elementUtil.getTypeElement(IAppShip_GROUP);
 
             /**
              *  Build input type, format as :
@@ -158,7 +161,7 @@ public class AppShipProcessor extends AbstractProcessor {
             );
 
             // Build input param name.
-            ParameterSpec tollgateParamSpec = ParameterSpec.builder(inputMapTypeOfTollgate, "interceptors").build();
+            ParameterSpec tollgateParamSpec = ParameterSpec.builder(inputMapTypeOfTollgate, "AppShips").build();
 
             // Build method : 'loadInto'
             MethodSpec.Builder loadIntoMethodOfTollgateBuilder = MethodSpec.methodBuilder(METHOD_LOAD_INTO)
@@ -167,16 +170,16 @@ public class AppShipProcessor extends AbstractProcessor {
                     .addParameter(tollgateParamSpec);
 
             // Generate
-            if (null != interceptors && interceptors.size() > 0) {
+            if (null != AppShips && AppShips.size() > 0) {
                 // Build method body
-                for (Map.Entry<Integer, Element> entry : interceptors.entrySet()) {
-                    loadIntoMethodOfTollgateBuilder.addStatement("interceptors.put(" + entry.getKey() + ", $T.class)", ClassName.get((TypeElement) entry.getValue()));
+                for (Map.Entry<Integer, Element> entry : AppShips.entrySet()) {
+                    loadIntoMethodOfTollgateBuilder.addStatement("AppShips.put(" + entry.getKey() + ", $T.class)", ClassName.get((TypeElement) entry.getValue()));
                 }
             }
 
-            // Write to disk(Write file even interceptors is empty.)
+            // Write to disk(Write file even AppShips is empty.)
             JavaFile.builder(PACKAGE_OF_GENERATE_FILE,
-                    TypeSpec.classBuilder(NAME_OF_INTERCEPTOR + SEPARATOR + moduleName)
+                    TypeSpec.classBuilder(NAME_OF_AppShip + SEPARATOR + moduleName)
                             .addModifiers(PUBLIC)
                             .addJavadoc(WARNING_TIPS)
                             .addMethod(loadIntoMethodOfTollgateBuilder.build())
@@ -184,19 +187,19 @@ public class AppShipProcessor extends AbstractProcessor {
                             .build()
             ).build().writeTo(mFiler);
 
-            logger.info(">>> Interceptor group write over. <<<");
+            logger.info(">>> AppShip group write over. <<<");
         }
     }
 
     /**
      * Verify inteceptor meta
      *
-     * @param element Interceptor taw type
+     * @param element AppShip taw type
      * @return verify result
      */
     private boolean verify(Element element) {
-        Interceptor interceptor = element.getAnnotation(Interceptor.class);
-        // It must be implement the interface IInterceptor and marked with annotation Interceptor.
-        return null != interceptor && ((TypeElement) element).getInterfaces().contains(iInterceptor);
+        AppShip AppShip = element.getAnnotation(AppShip.class);
+        // It must be implement the interface IAppShip and marked with annotation AppShip.
+        return null != AppShip && ((TypeElement) element).getInterfaces().contains(iAppShip);
     }
 }

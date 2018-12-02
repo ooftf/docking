@@ -42,12 +42,12 @@ public class Docking {
             /**
              * 找到指定包下的所有类
              */
-            appSet = ClassUtil.getFileNameByPackageName(application, Consts.ROUTE_ROOT_PAKCAGE);
+            appSet = ClassUtil.getFileNameByPackageName(application, Consts.ROUTE_ROOT_PACKAGE);
             /**
              * 过滤出固定格式的注册器
              */
             for (String className : appSet) {
-                if (className.startsWith(Consts.ROUTE_ROOT_PAKCAGE + Consts.DOT + Consts.SDK_NAME + Consts.SEPARATOR + Consts.SUFFIX_APP_SHIP)) {
+                if (className.startsWith(Consts.ROUTE_ROOT_PACKAGE + Consts.DOT + Consts.SDK_NAME + Consts.SEPARATOR + Consts.SUFFIX_APP_SHIP)) {
                     // This one of root elements, load root.
                     ((IAppShipRegister) (Class.forName(className).getConstructor().newInstance())).regsiter(applications);
                 }

@@ -7,6 +7,7 @@ dependencies {
     compile 'com.squareup:javapoet:1.7.0'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'org.apache.commons:commons-collections4:4.1'
+    compile project(path: ':annotation')
 }
 
 sourceCompatibility = "7"
