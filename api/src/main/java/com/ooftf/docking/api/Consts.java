@@ -12,5 +12,6 @@ public class Consts {
     public static final String DOT = ".";
 
     public static final String TAG = "Docking";
-    public static final String ROUTE_ROOT_PACKAGE = "com.ooftf.android.docking.app";
+
+    public static final String REGISTER_PACKAGE_NAME = "com.ooftf.docking.register";
 }

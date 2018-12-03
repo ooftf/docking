@@ -8,5 +8,10 @@ import java.util.List;
  * @date 2018/11/19 0019
  */
 public interface IAppShipRegister {
-    void regsiter(List<IApplication> list);
+    /**
+     * 添加IApplication 模块
+     *
+     * @param list
+     */
+    void register(List<IApplication> list);
 }
