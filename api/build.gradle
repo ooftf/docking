@@ -1,11 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.ooftf'
+apply plugin: 'com.novoda.bintray-release'
 android {
     compileSdkVersion 28
-
-
-
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 28
@@ -24,11 +22,23 @@ android {
     }
 
 }
-
+publish {
+    repoName = 'maven'
+    userOrg = 'ooftf'      // bintray注册的用户名
+    groupId = 'com.ooftf'
+    artifactId = 'docking-api'// bintray创建的package
+    publishVersion = '1.0.0'
+    desc = 'nothing'
+}
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    api 'com.github.ooftf.docking:annotation:-SNAPSHOT'
+    compile project(path: ':annotation')
 }

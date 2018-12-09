@@ -1,6 +1,20 @@
 apply plugin: 'java-library'
 apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.ooftf'
+apply plugin: 'com.novoda.bintray-release'
+publish {
+    repoName = 'maven' // 默认是maven，如果不是maven需要指定
+    userOrg = 'ooftf'      // bintray注册的用户名
+    groupId = 'com.ooftf'
+    artifactId = 'docking-compiler'// bintray创建的package
+    publishVersion = '1.0.0'
+    desc = 'nothing'
+}
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.google.auto.service:auto-service:1.0-rc2'
@@ -8,7 +22,7 @@ dependencies {
     compile 'com.squareup:javapoet:1.10.0'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'org.apache.commons:commons-collections4:4.1'
-    api 'com.github.ooftf.docking:annotation:-SNAPSHOT'
+    compile project(path: ':annotation')
 }
 
 sourceCompatibility = "7"
