@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import com.ooftf.docking.annotation.Consts;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -47,9 +49,9 @@ public class Docking {
              * 过滤出固定格式的注册器
              */
             for (String className : appSet) {
-                if (className.startsWith(Consts.REGISTER_PACKAGE_NAME + Consts.DOT + Consts.SDK_NAME + Consts.SEPARATOR + Consts.SUFFIX_APP_SHIP)) {
+                if (className.startsWith(Consts.REGISTER_PACKAGE_NAME + Consts.DOT + Consts.PROJECT + Consts.SEPARATOR + Consts.SUFFIX_APPLICATION)) {
                     // This one of root elements, load root.
-                    ((IAppShipRegister) (Class.forName(className).getConstructor().newInstance())).register(applications);
+                    ((IApplicationRegister) (Class.forName(className).getConstructor().newInstance())).register(applications);
                 }
             }
             notifyOnCreate();

@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.CLASS)
-public @interface AppShip {
+public @interface Application {
 }

@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import com.ooftf.docking.annotation.Consts;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -39,6 +41,7 @@ public class ClassUtil {
     private static final int VM_WITH_MULTIDEX_VERSION_MAJOR = 2;
     private static final int VM_WITH_MULTIDEX_VERSION_MINOR = 1;
     public static final String PATTERN_VERSION_D_D_D = "(\\d+)\\.(\\d+)(\\.\\d+)?";
+    public static final String SP_NAME_DOCKING = "sp_name_docking";
 
     /**
      * 通过指定包名，扫描包下面包含的所有的ClassName
@@ -48,6 +51,13 @@ public class ClassUtil {
      * @return 所有class的集合
      */
     public static Set<String> getFileNameByPackageName(Context context, final String packageName) throws PackageManager.NameNotFoundException, IOException, InterruptedException {
+        if (!Docking.isDebug) {
+            Set<String> stringSet = getCache(context);
+            if (stringSet != null) {
+                return stringSet;
+            }
+        }
+
         final Set<String> classNames = new HashSet<>();
 
         List<String> paths = getSourcePaths(context);
@@ -91,9 +101,34 @@ public class ClassUtil {
         }
 
         parserCtl.await();
-
+        putCache(context, classNames);
         Log.d(Consts.TAG, "Filter " + classNames.size() + " classes by packageName <" + packageName + ">");
         return classNames;
+    }
+
+    private static void putCache(Context context, Set<String> classNames) {
+        context.getSharedPreferences(SP_NAME_DOCKING, Context.MODE_PRIVATE).edit().putStringSet(String.valueOf(getVersionCode(context)), classNames).apply();
+    }
+
+    private static Set<String> getCache(Context context) {
+        return context.getSharedPreferences(SP_NAME_DOCKING, Context.MODE_PRIVATE).getStringSet(String.valueOf(getVersionCode(context)), null);
+    }
+
+    /**
+     * 获取当前本地apk的版本
+     *
+     * @param mContext
+     * @return
+     */
+    public static int getVersionCode(Context mContext) {
+        int versionCode = 0;
+        try {
+            versionCode = mContext.getPackageManager().
+                    getPackageInfo(mContext.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionCode;
     }
 
     /**

@@ -1,7 +1,8 @@
 package com.ooftf.docking.compiler;
 
 import com.google.auto.service.AutoService;
-import com.ooftf.docking.annotation.AppShip;
+import com.ooftf.docking.annotation.Application;
+import com.ooftf.docking.annotation.Consts;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -35,16 +36,14 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 
-import static com.ooftf.docking.compiler.Consts.KEY_MODULE_NAME;
-import static com.ooftf.docking.compiler.Consts.SEPARATOR;
-import static com.ooftf.docking.compiler.Consts.WARNING_TIPS;
+import static com.ooftf.docking.annotation.Consts.KEY_MODULE_NAME;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 @AutoService(Processor.class)
-@SupportedOptions(KEY_MODULE_NAME)
+@SupportedOptions(Consts.KEY_MODULE_NAME)
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedAnnotationTypes({"com.ooftf.docking.annotation.AppShip"})
-public class AppShipProcessor extends AbstractProcessor {
+@SupportedAnnotationTypes({Consts.APPLICATION_ANNOTATION_NAME})
+public class ApplicationProcessor extends AbstractProcessor {
     private List<Element> AppShips = new ArrayList<>();
     // File util, write class file into disk.
     private Filer mFiler;
@@ -89,10 +88,10 @@ public class AppShipProcessor extends AbstractProcessor {
             moduleName = moduleName.replaceAll("[^0-9a-zA-Z_]+", "");
 
         } else {
-            throw new RuntimeException("ARouter::Compiler >>> No module name, for more information, look at gradle log.");
+            throw new RuntimeException("Docking::Compiler >>> No module name, for more information, look at gradle log.");
         }
         //添加注解@AppShip 需要实现的接口
-        iApplication = elementUtil.getTypeElement(Consts.IAPPLICATION).asType();
+        iApplication = elementUtil.getTypeElement(Consts.IAPPLICATION_INTERFACE_NAME).asType();
 
     }
 
@@ -107,7 +106,7 @@ public class AppShipProcessor extends AbstractProcessor {
         log("process" + annotations);
         if (CollectionUtils.isNotEmpty(annotations)) {
             log("isNotEmpty");
-            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(AppShip.class);
+            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Application.class);
             log("isNotEmpty" + elements.toString());
             try {
                 parseAppShips(elements);
@@ -142,7 +141,7 @@ public class AppShipProcessor extends AbstractProcessor {
     private void buildJavaClass() throws IOException {
         log("buildJavaClass");
         // 生成类需要实现的接口
-        TypeElement classInterface = elementUtil.getTypeElement("com.ooftf.docking.api.IAppShipRegister");
+        TypeElement classInterface = elementUtil.getTypeElement(Consts.GEN_CLASS_INTERFACE_NAME);
         // 构建参数
         ParameterSpec listApplicationParam = buildParam();
 
@@ -157,15 +156,15 @@ public class AppShipProcessor extends AbstractProcessor {
         if (null != AppShips && AppShips.size() > 0) {
             // Build method body
             for (Element e : AppShips) {
-                loadIntoMethodOfTollgateBuilder.addStatement("applications.add(new $T());",ClassName.get((TypeElement) e));
+                loadIntoMethodOfTollgateBuilder.addStatement("applications.add(new $T());", ClassName.get((TypeElement) e));
             }
         }
 
         // Write to disk(Write file even AppShips is empty.)
         JavaFile.builder(Consts.REGISTER_PACKAGE_NAME,
-                TypeSpec.classBuilder("Docking" + SEPARATOR + "AppShips" + SEPARATOR + moduleName)
+                TypeSpec.classBuilder(Consts.PROJECT + Consts.SEPARATOR + Consts.SUFFIX_APPLICATION + Consts.SEPARATOR + moduleName)
                         .addModifiers(PUBLIC)
-                        .addJavadoc(WARNING_TIPS)
+                        .addJavadoc(Consts.WARNING_TIPS)
                         .addMethod(loadIntoMethodOfTollgateBuilder.build())
                         .addSuperinterface(ClassName.get(classInterface))
                         .build()
@@ -195,7 +194,7 @@ public class AppShipProcessor extends AbstractProcessor {
      */
     private boolean verify(Element element) {
         log("verify");
-        AppShip AppShip = element.getAnnotation(AppShip.class);
+        Application AppShip = element.getAnnotation(Application.class);
         // It must be implement the interface IApplication and marked with annotation AppShip.
         return null != AppShip && ((TypeElement) element).getInterfaces().contains(iApplication);
     }

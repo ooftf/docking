@@ -5,7 +5,7 @@ apply plugin: 'com.novoda.bintray-release'
 android {
     compileSdkVersion 28
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 11
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -24,9 +24,9 @@ android {
 }
 publish {
     repoName = 'maven'
-    userOrg = 'ooftf'      // bintray注册的用户名
+    userOrg = 'ooftf'
     groupId = 'com.ooftf'
-    artifactId = 'docking-api'// bintray创建的package
+    artifactId = 'docking-api'
     publishVersion = '1.0.0'
     desc = 'nothing'
     bintrayUser = 'ooftf'

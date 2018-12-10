@@ -7,7 +7,7 @@ import java.util.List;
  * @email 994749769@qq.com
  * @date 2018/11/19 0019
  */
-public interface IAppShipRegister {
+public interface IApplicationRegister {
     /**
      * 添加IApplication 模块
      *
