@@ -68,14 +68,17 @@ public class AppShipProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+
         /**
          * 初始化需要用到的工具
          */
+        messager = processingEnv.getMessager();
+        log("init");
         // Generate class.  用于生成java文件
         mFiler = processingEnv.getFiler();
         // Get class meta.
         elementUtil = processingEnv.getElementUtils();
-        messager = processingEnv.getMessager();
+
         // Attempt to get user configuration [moduleName]
         Map<String, String> options = processingEnv.getOptions();
         if (MapUtils.isNotEmpty(options)) {
@@ -101,8 +104,11 @@ public class AppShipProcessor extends AbstractProcessor {
      */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        log("process" + annotations);
         if (CollectionUtils.isNotEmpty(annotations)) {
+            log("isNotEmpty");
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(AppShip.class);
+            log("isNotEmpty" + elements.toString());
             try {
                 parseAppShips(elements);
             } catch (Exception e) {
@@ -120,6 +126,7 @@ public class AppShipProcessor extends AbstractProcessor {
      * @param elements elements of tollgate.
      */
     private void parseAppShips(Set<? extends Element> elements) throws IOException {
+        log("parseAppShips");
         if (CollectionUtils.isNotEmpty(elements)) {
             // Verify and cache, sort incidentally.
             for (Element element : elements) {
@@ -133,6 +140,7 @@ public class AppShipProcessor extends AbstractProcessor {
     }
 
     private void buildJavaClass() throws IOException {
+        log("buildJavaClass");
         // 生成类需要实现的接口
         TypeElement classInterface = elementUtil.getTypeElement("com.ooftf.docking.api.IAppShipRegister");
         // 构建参数
@@ -149,7 +157,7 @@ public class AppShipProcessor extends AbstractProcessor {
         if (null != AppShips && AppShips.size() > 0) {
             // Build method body
             for (Element e : AppShips) {
-                loadIntoMethodOfTollgateBuilder.addStatement("applications.add(new " + e.getSimpleName() + "());");
+                loadIntoMethodOfTollgateBuilder.addStatement("applications.add(new $T());",ClassName.get((TypeElement) e));
             }
         }
 
@@ -165,6 +173,7 @@ public class AppShipProcessor extends AbstractProcessor {
     }
 
     private ParameterSpec buildParam() {
+        log("buildParam");
         // 参数需要实现的IApplication
         TypeElement genericParam = elementUtil.getTypeElement("com.ooftf.docking.api.IApplication");
         // 需要实现方法register的参数 void register(List<IApplication> list);List<IApplication> list
@@ -185,12 +194,13 @@ public class AppShipProcessor extends AbstractProcessor {
      * @return verify result
      */
     private boolean verify(Element element) {
+        log("verify");
         AppShip AppShip = element.getAnnotation(AppShip.class);
         // It must be implement the interface IApplication and marked with annotation AppShip.
         return null != AppShip && ((TypeElement) element).getInterfaces().contains(iApplication);
     }
 
     private void log(String message) {
-        messager.printMessage(Diagnostic.Kind.ERROR, "Docking::" + message);
+        messager.printMessage(Diagnostic.Kind.WARNING, "Docking--compiler::" + message);
     }
 }

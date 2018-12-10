@@ -29,6 +29,9 @@ publish {
     artifactId = 'docking-api'// bintray创建的package
     publishVersion = '1.0.0'
     desc = 'nothing'
+    bintrayUser = 'ooftf'
+    bintrayKey = bintray_key
+    dryRun = false
 }
 tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')
@@ -40,5 +43,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile project(path: ':annotation')
+    compile 'com.ooftf:docking-annotation:1.0.0'
 }

@@ -9,6 +9,9 @@ publish {
     artifactId = 'docking-annotation'// bintray创建的package
     publishVersion = '1.0.0'
     desc = 'nothing'
+    bintrayUser = 'ooftf'
+    bintrayKey = bintray_key
+    dryRun = false
 }
 tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')
