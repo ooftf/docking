@@ -64,9 +64,8 @@ public class ModuleApp implements IApplication {
 
         @Override
         protected void attachBaseContext(Context base) {
-            Docking.notifyAttachBaseContext(base);
             super.attachBaseContext(base);
-
+            Docking.notifyAttachBaseContext(base);
         }
     }
 ```
