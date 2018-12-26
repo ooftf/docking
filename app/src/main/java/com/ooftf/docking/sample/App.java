@@ -31,8 +31,7 @@ public class App extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-        Docking.notifyAttachBaseContext(base);
         super.attachBaseContext(base);
-
+        Docking.notifyAttachBaseContext(base);
     }
 }
