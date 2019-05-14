@@ -2,16 +2,6 @@ package com.ooftf.docking.api;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageManager;
-
-import com.ooftf.docking.annotation.Consts;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author ooftf
@@ -22,82 +12,44 @@ public class Docking {
 
     protected static Application mApplication;
     protected static boolean isDebug;
-    protected static ThreadPoolExecutor mExecutor;
-    protected static List<IApplication> applications = new ArrayList<>();
 
     /**
-     *
-     * 一定要在 onCreate 中调用
+     * 在Application 的 非静态代码块 中调用
      *
      * @param application
      * @param isDebug
-     * @param executor
      */
-    public static void init(Application application, boolean isDebug, ThreadPoolExecutor executor) {
+    public static void init(Application application, boolean isDebug) {
         mApplication = application;
         Docking.isDebug = isDebug;
-        mExecutor = executor;
-
-
-        try {
-            Set<String> appSet;
-            /**
-             * 找到指定包下的所有类
-             */
-            appSet = ClassUtil.getFileNameByPackageName(application, Consts.REGISTER_PACKAGE_NAME);
-            /**
-             * 过滤出固定格式的注册器
-             */
-            for (String className : appSet) {
-                if (className.startsWith(Consts.REGISTER_PACKAGE_NAME + Consts.DOT + Consts.PROJECT + Consts.SEPARATOR + Consts.SUFFIX_APPLICATION)) {
-                    // This one of root elements, load root.
-                    ((IApplicationRegister) (Class.forName(className).getConstructor().newInstance())).register(applications);
-                }
-            }
-            notifyOnCreate();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        for (IApplication app : ApplicationManager.apps) {
+            app.init(mApplication);
         }
-
     }
 
-    private static void notifyOnCreate() {
-        for (IApplication app : applications) {
-            app.onCreate(mApplication);
+    public static void notifyOnCreate() {
+        for (IApplication app : ApplicationManager.apps) {
+            app.onCreate();
         }
 
     }
 
     public static void notifyOnLowMemory() {
-        for (IApplication app : applications) {
+        for (IApplication app : ApplicationManager.apps) {
             app.onLowMemory();
         }
 
     }
 
     public static void notifyOnTerminate() {
-        for (IApplication app : applications) {
+        for (IApplication app : ApplicationManager.apps) {
             app.onTerminate();
         }
 
     }
 
     public static void notifyAttachBaseContext(Context context) {
-        for (IApplication app : applications) {
+        for (IApplication app : ApplicationManager.apps) {
             app.attachBaseContext(context);
         }
 

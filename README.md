@@ -8,20 +8,27 @@
 通过注解处理器，生成各个组件的application注册器，然后在application中扫描当前代码找到application注册器，通过反射实例化注册器，注册各个模块的applicaton
 
 # 使用方式
-## 引入
+## 引入 
 [ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-api/images/download.svg) ](https://bintray.com/ooftf/maven/docking-api/_latestVersion)
-[ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-compiler/images/download.svg) ](https://bintray.com/ooftf/maven/docking-compiler/_latestVersion)
+## AutoRegister ![地址](https://github.com/luckybilly/AutoRegister)
+[
+                    'scanInterface'             : 'com.ooftf.docking.api.IApplication'
+                    , 'codeInsertToClassName'   : 'com.ooftf.docking.api.ApplicationManager'
+                    , 'codeInsertToMethodName'  : 'init'
+                    , 'registerMethodName'      : 'register'
+]
 ``` gradle
- implementation 'com.ooftf:docking-api:1.0.0'
- annotationProcessor 'com.ooftf:docking-compiler:1.0.0'
+ implementation 'com.ooftf:docking-api:2.0.0'
 ```
 ## 添加组件Application
-生成一个Java类实现IApplication接口添加注解 @com.ooftf.docking.annotation.Application
 ``` java
-@com.ooftf.docking.annotation.Application
 public class ModuleApp implements IApplication {
     @Override
-    public void onCreate(Application application) {
+    public void init(Application application) {
+        //TODO
+    }
+    @Override
+    public void onCreate() {
         //TODO
     }
 
@@ -39,15 +46,26 @@ public class ModuleApp implements IApplication {
     public void attachBaseContext(Context context) {
        //TODO
     }
+    /**
+    * 返回值越大优先级越高
+    * @return 
+    */
+    @Override
+    public int getPriority() {
+        return 0;
+    }
 }
 ```
 ## 在项目的Applicaton的onCreate方法中调用
 ``` java
     public class App extends Application {
+        {
+            Docking.init(this, true);
+        }
         @Override
         public void onCreate() {
             super.onCreate();
-            Docking.init(this, true, ThreadUtil.getDefaultThreadPool());
+            Docking.notifyOnCreate();
         }
 
         @Override

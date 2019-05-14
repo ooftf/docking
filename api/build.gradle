@@ -27,7 +27,7 @@ publish {
     userOrg = 'ooftf'
     groupId = 'com.ooftf'
     artifactId = 'docking-api'
-    publishVersion = '1.0.0'
+    publishVersion = '2.0.0'//-snapshot
     desc = 'nothing'
     bintrayUser = 'ooftf'
     bintrayKey = bintray_key
@@ -43,5 +43,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile 'com.ooftf:docking-annotation:1.0.0'
 }

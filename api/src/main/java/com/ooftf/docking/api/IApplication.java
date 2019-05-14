@@ -9,11 +9,15 @@ import android.content.Context;
  * @date 2018/11/17 0017
  */
 public interface IApplication {
-    void onCreate(Application application);
+    void init(Application application);
+
+    void onCreate();
 
     void onLowMemory();
 
     void onTerminate();
 
     void attachBaseContext(Context context);
+
+    int getPriority();
 }
