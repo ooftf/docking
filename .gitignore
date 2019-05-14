@@ -6,4 +6,7 @@
 /captures
 .externalNativeBuild
 .idea/
-!/.idea/modules.xml
+!/.idea/gradle.xml
+!/.idea/misc.xml
+!/.idea/runConfigurations.xml
+!/.idea/encodings.xml
