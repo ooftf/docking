@@ -10,13 +10,13 @@
 # 使用方式
 ## 引入 
 [ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-api/images/download.svg) ](https://bintray.com/ooftf/maven/docking-api/_latestVersion)
-## AutoRegister ![地址](https://github.com/luckybilly/AutoRegister)
-[
-                    'scanInterface'             : 'com.ooftf.docking.api.IApplication'
-                    , 'codeInsertToClassName'   : 'com.ooftf.docking.api.ApplicationManager'
-                    , 'codeInsertToMethodName'  : 'init'
-                    , 'registerMethodName'      : 'register'
-]
+## [AutoRegister](https://github.com/luckybilly/AutoRegister)
+    [
+                        'scanInterface'             : 'com.ooftf.docking.api.IApplication'
+                        , 'codeInsertToClassName'   : 'com.ooftf.docking.api.ApplicationManager'
+                        , 'codeInsertToMethodName'  : 'init'
+                        , 'registerMethodName'      : 'register'
+    ]
 ``` gradle
  implementation 'com.ooftf:docking-api:2.0.0'
 ```
