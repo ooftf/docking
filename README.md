@@ -9,8 +9,8 @@
 
 # 使用方式
 ## 引入 
-[ ![Api Download](https://api.bintray.com/packages/ooftf/maven/docking-api/images/download.svg) ](https://bintray.com/ooftf/maven/docking-api/_latestVersion)
-[ ![Plugin Download](https://api.bintray.com/packages/ooftf/maven/docking-plugin/images/download.svg) ](https://bintray.com/ooftf/maven/docking-plugin/_latestVersion)
+Api  [ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-api/images/download.svg) ](https://bintray.com/ooftf/maven/docking-api/_latestVersion)  
+Plugin  [ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-plugin/images/download.svg) ](https://bintray.com/ooftf/maven/docking-plugin/_latestVersion)
 
 ``` gradle
  在项目的build.gradle添加
