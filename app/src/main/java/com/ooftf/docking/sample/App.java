@@ -1,7 +1,9 @@
 package com.ooftf.docking.sample;
 
 import android.app.Application;
+import android.content.ComponentCallbacks;
 import android.content.Context;
+import android.content.res.Configuration;
 
 import com.ooftf.docking.api.Docking;
 
