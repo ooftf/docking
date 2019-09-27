@@ -10,14 +10,14 @@
 # 使用方式
 ## 引入 
 [ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-api/images/download.svg) ](https://bintray.com/ooftf/maven/docking-api/_latestVersion)
-## [AutoRegister](https://github.com/luckybilly/AutoRegister)
-    [
-                        'scanInterface'             : 'com.ooftf.docking.api.IApplication'
-                        , 'codeInsertToClassName'   : 'com.ooftf.docking.api.ApplicationManager'
-                        , 'codeInsertToMethodName'  : 'init'
-                        , 'registerMethodName'      : 'register'
-    ]
+[ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-plugin/images/download.svg) ](https://bintray.com/ooftf/maven/docking-plugin/_latestVersion)
+
 ``` gradle
+ 在项目的build.gradle添加
+ classpath 'com.ooftf:docking-plugin:2.0.0'
+ 在 app下build.gradle中添加
+ apply plugin: 'docking-register'
+ 在组件中添加
  implementation 'com.ooftf:docking-api:2.0.0'
 ```
 ## 添加组件Application

@@ -1,0 +1,36 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'com.novoda.bintray-release'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+}
+
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation 'com.android.tools.build:gradle:3.5.0'
+}
+
+
+task sourcesJar(type: Jar) {
+    from project.file('src/main/groovy')
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+publish {
+    repoName = 'maven' // 默认是maven，如果不是maven需要指定
+    userOrg = 'ooftf'      // bintray注册的用户名
+    groupId = 'com.ooftf'
+    artifactId = 'docking-plugin'// bintray创建的package
+    publishVersion = '2.0.0'
+    desc = 'nothing'
+    bintrayUser = 'ooftf'
+    bintrayKey = bintray_key
+    dryRun = false
+}
