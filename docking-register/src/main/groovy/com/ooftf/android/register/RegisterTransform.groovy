@@ -10,8 +10,7 @@ import org.gradle.api.Project
 
 /**
  *
- * @author billy.qi
- * @since 17/3/21 11:48
+ * @author billy.qi* @since 17/3/21 11:48
  */
 class RegisterTransform extends Transform {
 
@@ -83,9 +82,10 @@ class RegisterTransform extends Transform {
         }
 
         CodeScanProcessor scanProcessor = new CodeScanProcessor(config.list, cacheMap)
-
+        println "docking-register   jars : ${inputs.size()}"
         // 遍历输入文件
         inputs.each { TransformInput input ->
+            println "docking-register   jarsss : ${input.jarInputs.size()}"
             // 遍历jar
             input.jarInputs.each { JarInput jarInput ->
                 if (jarInput.status != Status.NOTCHANGED && cacheMap) {
@@ -95,7 +95,7 @@ class RegisterTransform extends Transform {
             }
             // 遍历目录
             input.directoryInputs.each { DirectoryInput directoryInput ->
-                long dirTime = System.currentTimeMillis();
+                long dirTime = System.currentTimeMillis()
                 // 获得产物的目录
                 File dest = outputProvider.getContentLocation(directoryInput.name, directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
                 String root = directoryInput.file.absolutePath
@@ -121,7 +121,6 @@ class RegisterTransform extends Transform {
                 println "docking-register cost time: ${System.currentTimeMillis() - dirTime}, scan time: ${scanTime - dirTime}. path=${root}"
             }
         }
-
         if (cacheMap != null && cacheFile && gson) {
             def json = gson.toJson(cacheMap)
             AutoRegisterHelper.cacheRegisterHarvest(cacheFile, json)
@@ -152,13 +151,13 @@ class RegisterTransform extends Transform {
     }
 
     void scanJar(JarInput jarInput, TransformOutputProvider outputProvider, CodeScanProcessor scanProcessor) {
-
         // 获得输入文件
         File src = jarInput.file
         //遍历jar的字节码类文件，找到需要自动注册的类
         File dest = getDestFile(jarInput, outputProvider)
-        long time = System.currentTimeMillis();
-        if (!scanProcessor.scanJar(src, dest) //直接读取了缓存，没有执行实际的扫描
+        long time = System.currentTimeMillis()
+        boolean scanJar = !scanProcessor.scanJar(src, dest)
+        if (scanJar //直接读取了缓存，没有执行实际的扫描
                 //此jar文件中不需要被注入代码
                 //为了避免增量编译时代码注入重复，被注入代码的jar包每次都重新复制
                 && !scanProcessor.isCachedJarContainsInitClass(src.absolutePath)) {

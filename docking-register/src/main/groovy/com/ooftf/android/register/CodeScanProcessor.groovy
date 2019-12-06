@@ -37,7 +37,6 @@ class CodeScanProcessor {
         def srcFilePath = jarFile.absolutePath
         def file = new JarFile(jarFile)
         Enumeration enumeration = file.entries()
-
         while (enumeration.hasMoreElements()) {
             JarEntry jarEntry = (JarEntry) enumeration.nextElement()
             String entryName = jarEntry.getName()
@@ -48,7 +47,15 @@ class CodeScanProcessor {
             //是否要过滤这个类，这个可配置
             if (shouldProcessClass(entryName)) {
                 InputStream inputStream = file.getInputStream(jarEntry)
-                scanClass(inputStream, jarFile.absolutePath)
+                try {
+                    scanClass(inputStream, jarFile.absolutePath)
+                }catch(ArrayIndexOutOfBoundsException e){
+                    println "docking-register   ArrayIndexOutOfBoundsException : ${jarEntry.toString()}"
+                    println "docking-register   ArrayIndexOutOfBoundsException : ${entryName}"
+                    println "docking-register   ArrayIndexOutOfBoundsException : ${jarFile.absolutePath}"
+                    e.printStackTrace()
+                }
+
                 inputStream.close()
             }
         }
