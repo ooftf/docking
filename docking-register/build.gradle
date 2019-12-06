@@ -28,7 +28,7 @@ publish {
     userOrg = 'ooftf'      // bintray注册的用户名
     groupId = 'com.ooftf'
     artifactId = 'docking-plugin'// bintray创建的package
-    publishVersion = '2.0.1-snapshot'
+    publishVersion = '2.1.1-snapshot'
     desc = 'nothing'
     bintrayUser = 'ooftf'
     bintrayKey = bintray_key
