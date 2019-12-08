@@ -54,6 +54,7 @@ class CodeScanProcessor {
                     println "docking-register   ArrayIndexOutOfBoundsException : ${entryName}"
                     println "docking-register   ArrayIndexOutOfBoundsException : ${jarFile.absolutePath}"
                     e.printStackTrace()
+                    throw e
                 }
 
                 inputStream.close()
