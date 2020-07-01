@@ -2,6 +2,9 @@ package com.ooftf.docking.api;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
+
+import com.blankj.utilcode.util.ProcessUtils;
 
 /**
  * @author ooftf
@@ -23,34 +26,59 @@ public class Docking {
         mApplication = application;
         Docking.isDebug = isDebug;
         for (IApplication app : ApplicationManager.apps) {
-            app.init(mApplication);
+            MainProcess mainProgress = null;
+            try {
+                mainProgress = app.getClass().getMethod("init", Application.class).getAnnotation(MainProcess.class);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            if (mainProgress != null) {
+                if (ProcessUtils.isMainProcess()) {
+                    app.init(application);
+                }
+            } else {
+                app.init(application);
+            }
         }
+
     }
 
-    public static void notifyOnCreate() {
+    public static void notifyOnCreate(Application application) {
         for (IApplication app : ApplicationManager.apps) {
-            app.onCreate();
+            MainProcess mainProgress = null;
+            try {
+                mainProgress = app.getClass().getMethod("onCreate", Application.class).getAnnotation(MainProcess.class);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            if (mainProgress != null) {
+                if (ProcessUtils.isMainProcess()) {
+                    app.onCreate(application);
+                }
+            } else {
+                app.onCreate(application);
+            }
+
         }
 
     }
 
-    public static void notifyOnLowMemory() {
-        for (IApplication app : ApplicationManager.apps) {
-            app.onLowMemory();
-        }
-
-    }
-
-    public static void notifyOnTerminate() {
-        for (IApplication app : ApplicationManager.apps) {
-            app.onTerminate();
-        }
-
-    }
 
     public static void notifyAttachBaseContext(Context context) {
         for (IApplication app : ApplicationManager.apps) {
-            app.attachBaseContext(context);
+            MainProcess mainProgress = null;
+            try {
+                mainProgress = app.getClass().getMethod("attachBaseContext", Context.class).getAnnotation(MainProcess.class);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            if (mainProgress != null) {
+                if (ProcessUtils.isMainProcess()) {
+                    app.attachBaseContext(context);
+                }
+            } else {
+                app.attachBaseContext(context);
+            }
         }
 
     }

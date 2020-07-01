@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.ooftf'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -27,7 +28,7 @@ publish {
     userOrg = 'ooftf'
     groupId = 'com.ooftf'
     artifactId = 'docking-api'
-    publishVersion = '2.0.0'//-snapshot
+    publishVersion = '2.1.0'//-snapshot
     desc = 'nothing'
     bintrayUser = 'ooftf'
     bintrayKey = bintray_key
@@ -43,4 +44,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'com.blankj:utilcodex:1.29.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

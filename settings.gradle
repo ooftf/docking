@@ -1,1 +1,1 @@
-include ':app', ':docking-register'
+include ':app', ':docking-register', ':api'
