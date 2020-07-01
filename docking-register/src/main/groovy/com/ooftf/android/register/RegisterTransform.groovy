@@ -64,7 +64,7 @@ class RegisterTransform extends Transform {
         boolean leftSlash = File.separator == '/'
 
 
-        def cacheEnabled = config.cacheEnabled
+        def cacheEnabled = false
         println("docking-register-----------isIncremental:${isIncremental}--------config.cacheEnabled:${cacheEnabled}--------------------\n")
 
         File jarManagerfile = null
