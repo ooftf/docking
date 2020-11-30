@@ -1,8 +1,6 @@
 package com.ooftf.docking.api;
 
 import android.app.Application;
-import android.content.Context;
-import android.util.Log;
 
 import com.blankj.utilcode.util.ProcessUtils;
 
@@ -13,39 +11,11 @@ import com.blankj.utilcode.util.ProcessUtils;
  */
 public class Docking {
 
-    protected static Application mApplication;
-    protected static boolean isDebug;
-
-    /**
-     * 在Application 的 非静态代码块 中调用
-     *
-     * @param application
-     * @param isDebug
-     */
-    public static void init(Application application, boolean isDebug) {
-        mApplication = application;
-        Docking.isDebug = isDebug;
-        for (IApplication app : ApplicationManager.apps) {
-            MainProcess mainProgress = null;
-            try {
-                mainProgress = app.getClass().getMethod("init", Application.class).getAnnotation(MainProcess.class);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-            if (mainProgress != null) {
-                if (ProcessUtils.isMainProcess()) {
-                    app.init(application);
-                }
-            } else {
-                app.init(application);
-            }
-        }
-
-    }
+    protected static boolean isDebug = false;
 
     public static void notifyOnCreate(Application application) {
         for (IApplication app : ApplicationManager.apps) {
-            MainProcess mainProgress = null;
+            MainProcess  mainProgress = null;
             try {
                 mainProgress = app.getClass().getMethod("onCreate", Application.class).getAnnotation(MainProcess.class);
             } catch (NoSuchMethodException e) {
@@ -60,26 +30,5 @@ public class Docking {
             }
 
         }
-
-    }
-
-
-    public static void notifyAttachBaseContext(Context context) {
-        for (IApplication app : ApplicationManager.apps) {
-            MainProcess mainProgress = null;
-            try {
-                mainProgress = app.getClass().getMethod("attachBaseContext", Context.class).getAnnotation(MainProcess.class);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-            if (mainProgress != null) {
-                if (ProcessUtils.isMainProcess()) {
-                    app.attachBaseContext(context);
-                }
-            } else {
-                app.attachBaseContext(context);
-            }
-        }
-
     }
 }

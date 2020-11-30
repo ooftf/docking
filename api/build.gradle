@@ -1,13 +1,10 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.ooftf'
-apply plugin: 'com.novoda.bintray-release'
-apply plugin: 'kotlin-android'
+apply plugin: 'ooftf-publish'
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -24,24 +21,12 @@ android {
 
 }
 publish {
-    repoName = 'maven'
-    userOrg = 'ooftf'
-    groupId = 'com.ooftf'
     artifactId = 'docking-api'
-    publishVersion = '2.1.0'//-snapshot
-    desc = 'nothing'
-    bintrayUser = 'ooftf'
-    bintrayKey = bintray_key
-    dryRun = false
-}
-tasks.withType(Javadoc) {
-    options.addStringOption('Xdoclint:none', '-quiet')
-    options.addStringOption('encoding', 'UTF-8')
-    options.addStringOption('charSet', 'UTF-8')
+    publishVersion = '3.0.0'//-snapshot
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.blankj:utilcodex:1.29.0'
