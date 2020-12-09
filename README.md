@@ -87,3 +87,7 @@ public class ModuleApp implements IApplication {
         }
     }
 ```
+## 混淆
+    -keepclassmembers public class * implements com.ooftf.docking.api.IApplication{
+        void onCreate(android.app.Application);
+    }
