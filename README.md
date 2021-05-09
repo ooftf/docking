@@ -8,44 +8,27 @@
 通过注解处理器，生成各个组件的application注册器，然后在application中扫描当前代码找到application注册器，通过反射实例化注册器，注册各个模块的applicaton
 
 # 使用方式
-## 引入 
-Api  [ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-api/images/download.svg) ](https://bintray.com/ooftf/maven/docking-api/_latestVersion)  
-Plugin  [ ![Download](https://api.bintray.com/packages/ooftf/maven/docking-plugin/images/download.svg) ](https://bintray.com/ooftf/maven/docking-plugin/_latestVersion)
+## 引入
+Api  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ooftf/docking-api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ooftf/docking-api)
+Plugin  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.ooftf/docking-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.ooftf/docking-plugin)
 
 ``` gradle
  在项目的build.gradle添加
- classpath 'com.ooftf:docking-plugin:2.0.0'
+ classpath 'com.github.ooftf:docking-plugin:2.1.3'
  在 app下build.gradle中添加
  apply plugin: 'docking-register'
  在组件中添加
- implementation 'com.ooftf:docking-api:2.0.0'
+ implementation 'com.github.ooftf:docking-api:3.0.0'
 ```
 ## 添加组件Application
 ``` java
 public class ModuleApp implements IApplication {
-    @Override
-    public void init(Application application) {
-        //TODO
-    }
+ 
     @Override
     public void onCreate() {
         //TODO
     }
-
-    @Override
-    public void onLowMemory() {
-        //TODO
-    }
-
-    @Override
-    public void onTerminate() {
-        //TODO
-    }
-
-    @Override
-    public void attachBaseContext(Context context) {
-       //TODO
-    }
+    
     /**
     * 返回值越大优先级越高
     * @return 
@@ -59,32 +42,13 @@ public class ModuleApp implements IApplication {
 ## 在项目的Applicaton的onCreate方法中调用
 ``` java
     public class App extends Application {
-        {
-            Docking.init(this, true);
-        }
+     
         @Override
         public void onCreate() {
             super.onCreate();
             Docking.notifyOnCreate();
         }
-
-        @Override
-        public void onTerminate() {
-            Docking.notifyOnTerminate();
-            super.onTerminate();
-        }
-
-        @Override
-        public void onLowMemory() {
-            Docking.notifyOnLowMemory();
-            super.onLowMemory();
-        }
-
-        @Override
-        protected void attachBaseContext(Context base) {
-            super.attachBaseContext(base);
-            Docking.notifyAttachBaseContext(base);
-        }
+        
     }
 ```
 ## 混淆

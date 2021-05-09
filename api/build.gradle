@@ -1,13 +1,11 @@
 apply plugin: 'com.android.library'
-apply plugin: 'ooftf-publish'
+apply plugin: 'ooftf-maven'
 apply plugin: 'kotlin-android'
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 30
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -23,13 +21,13 @@ android {
 }
 publish {
     artifactId = 'docking-api'
-    publishVersion = '3.0.0'//-snapshot
+    version = '3.0.0'//-snapshot
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.blankj:utilcodex:1.29.0'
+    implementation 'com.blankj:utilcodex:1.30.5'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

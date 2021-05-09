@@ -1,6 +1,6 @@
 apply plugin: 'groovy'
 apply plugin: 'maven'
-apply plugin: 'ooftf-publish'
+apply plugin: 'ooftf-maven'
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
@@ -13,17 +13,7 @@ dependencies {
     implementation 'com.android.tools.build:gradle:3.5.3'
 }
 
-
-task sourcesJar(type: Jar) {
-    from project.file('src/main/groovy')
-    classifier = 'sources'
-}
-
-artifacts {
-    archives sourcesJar
-}
-
 publish {
     artifactId = 'docking-plugin'// bintray创建的package
-    publishVersion = '2.1.3'
+    version = '2.1.3'
 }
